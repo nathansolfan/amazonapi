@@ -35,5 +35,7 @@ class ProductController extends Controller
             'price' => $request->price,
             'recorded_at' => now(),
         ]);
+        return response()->json($product, 200);
+
     }
 }

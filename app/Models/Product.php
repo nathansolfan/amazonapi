@@ -10,7 +10,7 @@ class Product extends Model
     use HasFactory;
 
     // create model for product
-    protected $fillable = ['name', 'description', 'price'];
+    protected $fillable = ['name', 'description', 'price', 'asin'];
 
     public function priceHistories()
     {

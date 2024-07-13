@@ -9,18 +9,25 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     public function store(Request $request)
-    {
-        $product = Product::create($request->all());
+{
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'required|string',
+        'price' => 'required|numeric',
+        'asin' => 'required|string|unique:products',
+    ]);
 
-        // create initial price
-        PriceHistory::create([
-            'product_id' => $product->id,
-            'price' => $product->price,
-            'recorded_at' => now(),
-        ]);
+    $product = Product::create($validatedData);
 
-        return response()->json($product, 201);
-    }
+    // create initial price
+    PriceHistory::create([
+        'product_id' => $product->id,
+        'price' => $product->price,
+        'recorded_at' => now(),
+    ]);
+
+    return response()->json($product, 201);
+}
 
     public function updatePrice(Request $request, $id)
     {
@@ -38,8 +45,11 @@ class ProductController extends Controller
 
     // Add this method
     public function showPriceHistory($id)
-    {
-        $priceHistories = PriceHistory::where('product_id', $id)->get();
-        return view('price_history', compact('priceHistories'));
-    }
+{
+    $product = Product::where('asin', $id)->firstOrFail();
+    $priceHistories = PriceHistory::where('product_id', $product->id)->orderBy('recorded_at', 'desc')->get();
+
+    return view('price_history', ['priceHistories' => $priceHistories]);
+}
+
 }

@@ -11,4 +11,4 @@ Route::get('/', function () {
 Route::post('/products', [ProductController::class, 'store']);
 Route::put('/products/{id}/price', [ProductController::class, 'updatePrice']);
 
-Route::get('/product/{asin}', [AmazonProductController::class, 'show']);
+Route::get('/search', [AmazonProductController::class, 'search']);

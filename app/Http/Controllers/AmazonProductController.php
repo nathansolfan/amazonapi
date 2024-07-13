@@ -14,9 +14,10 @@ class AmazonProductController extends Controller
         $this->amazonDataService = $amazonDataService;
     }
 
-    public function show($asin)
+    public function search(Request $request)
     {
-        $productData = $this->amazonDataService->getProductData($asin);
-        return view('amazon_product', compact('productData'));
+        $query = $request->input('query', 'Phone');
+        $products = $this->amazonDataService->searchProducts($query);
+        return view('amazon_product', compact('products'));
     }
 }

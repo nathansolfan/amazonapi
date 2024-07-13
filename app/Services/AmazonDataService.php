@@ -13,18 +13,28 @@ class AmazonDataService
         $this->client = new Client();
     }
 
-    public function getProductData($asin)
+    public function searchProducts($query, $page = 1, $country = 'US', $sortBy = 'RELEVANCE', $condition = 'ALL')
     {
-        $response = $this->client->request('GET', 'https://real-time-amazon-data.p.rapidapi.com/api_endpoint', [
-            'headers' => [
-                'X-RapidAPI-Key' => env('RAPIDAPI_KEY'),
-                'X-RapidAPI-Host' => 'real-time-amazon-data.p.rapidapi.com',
-            ],
-            'query' => [
-                'asin' => $asin,
-            ],
-        ]);
+        try {
+            $response = $this->client->request('GET', 'https://real-time-amazon-data.p.rapidapi.com/search', [
+                'headers' => [
+                    'x-rapidapi-host' => 'real-time-amazon-data.p.rapidapi.com',
+                    'x-rapidapi-key' => env('RAPIDAPI_KEY'),
+                ],
+                'query' => [
+                    'query' => $query,
+                    'page' => $page,
+                    'country' => $country,
+                    'sort_by' => $sortBy,
+                    'product_condition' => $condition,
+                ],
+                'verify' => false, // Disable SSL verification
+            ]);
 
-        return json_decode($response->getBody(), true);
+            $body = $response->getBody();
+            return json_decode($body, true);
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 }

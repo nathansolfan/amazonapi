@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    //
     public function store(Request $request)
     {
         $product = Product::create($request->all());
@@ -20,9 +19,8 @@ class ProductController extends Controller
             'recorded_at' => now(),
         ]);
 
-        return response()->json($product, 201);  
+        return response()->json($product, 201);
     }
-
 
     public function updatePrice(Request $request, $id)
     {
@@ -36,6 +34,12 @@ class ProductController extends Controller
             'recorded_at' => now(),
         ]);
         return response()->json($product, 200);
+    }
 
+    // Add this method
+    public function showPriceHistory($id)
+    {
+        $priceHistories = PriceHistory::where('product_id', $id)->get();
+        return view('price_history', compact('priceHistories'));
     }
 }

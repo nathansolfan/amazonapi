@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Services\AmazonDataService;
@@ -18,6 +17,6 @@ class AmazonProductController extends Controller
     {
         $query = $request->input('query', 'Phone');
         $products = $this->amazonDataService->searchProducts($query);
-        return view('amazon_product', compact('products'));
+        return view('amazon_product', ['products' => $products['data']['products'] ?? []]);
     }
 }
